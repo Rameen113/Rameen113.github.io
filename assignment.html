@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo List with Clock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    /* Clock styling */
+    #clock {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      background: #333;
+      padding: 10px 20px;
+      border-radius: 12px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    /* Todo list */
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #fff;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .buttons button {
+      margin-left: 5px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .buttons button:hover {
+      opacity: 0.8;
+    }
+
+    .started { background: #ffc107; color: #000; }
+    .half { background: #17a2b8; color: #fff; }
+    .done { background: #28a745; color: #fff; }
+    .delete { background: #dc3545; color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>My Todo List</h1>
+
+  <!-- Clock -->
+  <div id="clock"></div>
+
+  <!-- Todo list -->
+  <ul id="task-list">
+    <li>
+      <span>Task 1</span>
+      <div class="buttons">
+        <button class="started" onclick="updateStatus(this, 'Started')">Started</button>
+        <button class="half" onclick="updateStatus(this, '50% done')">50% done</button>
+        <button class="done" onclick="updateStatus(this, '100% done')">100% done</button>
+        <button class="delete" onclick="deleteTask(this)">Delete</button>
+      </div>
+    </li>
+    <li>
+      <span>Task 2</span>
+      <div class="buttons">
+        <button class="started" onclick="updateStatus(this, 'Started')">Started</button>
+        <button class="half" onclick="updateStatus(this, '50% done')">50% done</button>
+        <button class="done" onclick="updateStatus(this, '100% done')">100% done</button>
+        <button class="delete" onclick="deleteTask(this)">Delete</button>
+      </div>
+    </li>
+  </ul>
+
+  <script>
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      hours = hours.toString().padStart(2, '0');
+
+      const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+      document.getElementById('clock').textContent = timeString;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Todo list functions
+    function updateStatus(button, status) {
+      const li = button.closest("li");
+      li.querySelector("span").textContent += ` → ${status}`;
+    }
+
+    function deleteTask(button) {
+      button.closest("li").remove();
+    }
+  </script>
+</body>
+</html>
