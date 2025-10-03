@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List + Clock</title>
+    <title>My To-Do List + Clock</title>
     <style>
         body {
             font-family: sans-serif;
@@ -15,20 +15,7 @@
             margin: 0;
         }
 
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
+        /* Clock style */
         #clock {
             font-size: 1.2rem;
             font-weight: bold;
@@ -40,6 +27,21 @@
             top: 15px;
             right: 15px;
             box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+
+        /* Todo container */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
         }
 
         #taskInput {
@@ -78,6 +80,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .task-text {
@@ -87,6 +90,7 @@
         .buttons {
             display: flex;
             gap: 5px;
+            margin-top: 5px;
         }
 
         .buttons button {
@@ -105,10 +109,10 @@
 </head>
 <body>
 
-    <!-- Clock -->
+    <!-- CLOCK -->
     <div id="clock"></div>
 
-    <!-- Todo List -->
+    <!-- TODO LIST -->
     <div class="container">
         <h1>My To-Do List</h1>
         <input type="text" id="taskInput" placeholder="Add a new task...">
@@ -157,11 +161,11 @@
                     `;
 
                     // Buttons
+                    const taskTextEl = newTask.querySelector('.task-text');
                     const startedBtn = newTask.querySelector('.started');
                     const halfBtn = newTask.querySelector('.half');
                     const doneBtn = newTask.querySelector('.done');
                     const deleteBtn = newTask.querySelector('.delete');
-                    const taskTextEl = newTask.querySelector('.task-text');
 
                     startedBtn.addEventListener('click', () => {
                         taskTextEl.style.color = '#ffc107';
