@@ -1,125 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Todo List with Clock</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List + Clock</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-    h1 {
-      margin-bottom: 20px;
-    }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
 
-    /* Clock styling */
-    #clock {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: white;
-      background: #333;
-      padding: 10px 20px;
-      border-radius: 12px;
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
 
-    /* Todo list */
-    ul {
-      list-style: none;
-      padding: 0;
-    }
+        #clock {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            background: #333;
+            padding: 8px 15px;
+            border-radius: 10px;
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
 
-    li {
-      background: #fff;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+        #taskInput {
+            width: calc(100% - 70px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
 
-    .buttons button {
-      margin-left: 5px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+        #addButton {
+            width: 60px;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-    .buttons button:hover {
-      opacity: 0.8;
-    }
+        #addButton:hover {
+            background-color: #4cae4c;
+        }
 
-    .started { background: #ffc107; color: #000; }
-    .half { background: #17a2b8; color: #fff; }
-    .done { background: #28a745; color: #fff; }
-    .delete { background: #dc3545; color: #fff; }
-  </style>
+        #taskList {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        #taskList li {
+            background-color: #eee;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-text {
+            flex: 1;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .buttons button {
+            padding: 5px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .started { background-color: #ffc107; color: #000; }
+        .half { background-color: #17a2b8; color: white; }
+        .done { background-color: #28a745; color: white; }
+        .delete { background-color: #d9534f; color: white; }
+    </style>
 </head>
 <body>
-  <h1>My Todo List</h1>
 
-  <!-- Clock -->
-  <div id="clock"></div>
+    <!-- Clock -->
+    <div id="clock"></div>
 
-  <!-- Todo list -->
-  <ul id="task-list">
-    <li>
-      <span>Task 1</span>
-      <div class="buttons">
-        <button class="started" onclick="updateStatus(this, 'Started')">Started</button>
-        <button class="half" onclick="updateStatus(this, '50% done')">50% done</button>
-        <button class="done" onclick="updateStatus(this, '100% done')">100% done</button>
-        <button class="delete" onclick="deleteTask(this)">Delete</button>
-      </div>
-    </li>
-    <li>
-      <span>Task 2</span>
-      <div class="buttons">
-        <button class="started" onclick="updateStatus(this, 'Started')">Started</button>
-        <button class="half" onclick="updateStatus(this, '50% done')">50% done</button>
-        <button class="done" onclick="updateStatus(this, '100% done')">100% done</button>
-        <button class="delete" onclick="deleteTask(this)">Delete</button>
-      </div>
-    </li>
-  </ul>
+    <!-- Todo List -->
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button id="addButton">Add</button>
+        <ul id="taskList"></ul>
+    </div>
 
-  <script>
-    // Clock
-    function updateClock() {
-      const now = new Date();
-      let hours = now.getHours();
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      const seconds = now.getSeconds().toString().padStart(2, '0');
-      const ampm = hours >= 12 ? 'PM' : 'AM';
+    <script>
+        // === CLOCK ===
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
 
-      hours = hours % 12;
-      hours = hours ? hours : 12; 
-      hours = hours.toString().padStart(2, '0');
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            hours = hours.toString().padStart(2, '0');
 
-      const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
-      document.getElementById('clock').textContent = timeString;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+            const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+            document.getElementById('clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-    // Todo list functions
-    function updateStatus(button, status) {
-      const li = button.closest("li");
-      li.querySelector("span").textContent += ` → ${status}`;
-    }
+        // === TODO LIST ===
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskInput = document.getElementById('taskInput');
+            const addButton = document.getElementById('addButton');
+            const taskList = document.getElementById('taskList');
 
-    function deleteTask(button) {
-      button.closest("li").remove();
-    }
-  </script>
+            function addTask() {
+                const taskText = taskInput.value.trim();
+                if (taskText !== "") {
+                    const newTask = document.createElement('li');
+                    
+                    newTask.innerHTML = `
+                        <span class="task-text">${taskText}</span>
+                        <div class="buttons">
+                            <button class="started">Started</button>
+                            <button class="half">50% done</button>
+                            <button class="done">100% done</button>
+                            <button class="delete">Delete</button>
+                        </div>
+                    `;
+
+                    // Buttons
+                    const startedBtn = newTask.querySelector('.started');
+                    const halfBtn = newTask.querySelector('.half');
+                    const doneBtn = newTask.querySelector('.done');
+                    const deleteBtn = newTask.querySelector('.delete');
+                    const taskTextEl = newTask.querySelector('.task-text');
+
+                    startedBtn.addEventListener('click', () => {
+                        taskTextEl.style.color = '#ffc107';
+                        taskTextEl.textContent = taskText + " → Started";
+                    });
+
+                    halfBtn.addEventListener('click', () => {
+                        taskTextEl.style.color = '#17a2b8';
+                        taskTextEl.textContent = taskText + " → 50% done";
+                    });
+
+                    doneBtn.addEventListener('click', () => {
+                        taskTextEl.style.color = '#28a745';
+                        taskTextEl.textContent = taskText + " → 100% done";
+                    });
+
+                    deleteBtn.addEventListener('click', () => {
+                        taskList.removeChild(newTask);
+                    });
+
+                    taskList.appendChild(newTask);
+                    taskInput.value = "";
+                }
+            }
+
+            addButton.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') addTask();
+            });
+        });
+    </script>
+
 </body>
 </html>
